@@ -15,6 +15,5 @@ use App\Http\Controllers\PersonController;
 |
 */
 
-
-
+Route::get('/Person/{id}', [PersonController::class, 'get_person_with_info']);
 Route::get('/Persons', [PersonController::class,'get_all_person']);
