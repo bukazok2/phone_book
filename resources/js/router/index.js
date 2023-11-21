@@ -2,6 +2,7 @@ import {createRouter, createWebHistory } from 'vue-router'
 
 import phoneBook from '../components/phoneBooks/index.vue'
 import newPhoneBook from '../components/newPhoneBook/index.vue'
+import profile from '../components/profile/index.vue'
 import notFound from '../components/notFound.vue'
 
 const routes = [
@@ -12,6 +13,12 @@ const routes = [
     {
         path: '/new',
         component: newPhoneBook
+    },
+    {
+        path: '/profile/:id',
+        name: 'profile',
+        component: profile,
+        props: true
     },
     {
         path: '/:pathMatch(.*)*',

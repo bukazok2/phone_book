@@ -67,6 +67,12 @@
       >
         Submit
       </button>
+
+       <router-link to="/">
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4">
+          back
+        </button>
+      </router-link>
     </form>
   </div>
 </template>
@@ -104,9 +110,8 @@ export default {
             'Content-Type': 'multipart/form-data',
           },
         });
+        this.$router.push({ name: 'profile', params: { id: response.data.person.id } });
 
-        // Handle the response as needed
-        console.log('API response:', response.data);
       } catch (error) {
         console.error('Error submitting data:', error);
       }

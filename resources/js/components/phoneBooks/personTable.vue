@@ -17,12 +17,17 @@
           <td class="px-6 py-4 whitespace-nowrap border-b text-center">{{ person.home_address }}</td>
           <td class="px-6 py-4 whitespace-nowrap border-b text-center">{{ person.mailing_address }}</td>
           <td class="px-6 py-4 whitespace-nowrap border-b text-center">
-            <span class="cursor-pointer" @click="editPerson(person.id)">
+          <span class="cursor-pointer" @click="editPerson(person.id)">
               <font-awesome-icon icon="edit" />
-            </span>
-            <span class="cursor-pointer ml-2" @click="deletePerson(person.id)">
-               <font-awesome-icon icon="trash-can" />
-            </span>
+          </span>
+          <span class="cursor-pointer ml-2">
+              <font-awesome-icon icon="trash-can" />
+          </span>
+          <span class="cursor-pointer ml-2">
+            <router-link :to="`/profile/${person.id}`">
+              <font-awesome-icon icon="eye" />
+            </router-link>
+          </span>
           </td>
         </tr>
       </tbody>
