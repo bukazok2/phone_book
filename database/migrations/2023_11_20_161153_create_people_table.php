@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('people', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->integer(column:"attachment_id",unsigned:true)->nullable();
-            $table->string("mailing_address");
-            $table->string("home_address");
+            $table->string(column:"attachment")->nullable();
+            $table->string("mailing_address")->nullable();
+            $table->string("home_address")->nullable();
             $table->timestamps();
         });
     }
