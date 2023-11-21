@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Actions />
     <PersonTable :persons="persons" />
   </div>
 </template>
@@ -7,6 +8,7 @@
 <script>
 import axios from 'axios';
 import PersonTable from './personTable.vue';
+import Actions from './actions.vue';
 
 export default {
   data() {
@@ -30,6 +32,7 @@ export default {
   },
   components: {
     PersonTable,
+    Actions
   },
 };
 </script>

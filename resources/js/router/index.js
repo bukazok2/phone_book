@@ -1,12 +1,17 @@
 import {createRouter, createWebHistory } from 'vue-router'
 
-import phoneBook from '../components/phone_book/index.vue'
+import phoneBook from '../components/phoneBooks/index.vue'
+import newPhoneBook from '../components/newPhoneBook/index.vue'
 import notFound from '../components/notFound.vue'
 
 const routes = [
     {
         path: '/',
         component: phoneBook
+    },
+    {
+        path: '/new',
+        component: newPhoneBook
     },
     {
         path: '/:pathMatch(.*)*',
