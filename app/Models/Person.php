@@ -10,6 +10,13 @@ class Person extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'attachment',
+        'home_address',
+        'mailing_address',
+    ];
+
     public function personalInfo()
     {
         return $this->hasMany(PersonalInfo::class);

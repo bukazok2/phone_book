@@ -14,12 +14,12 @@
       </div>
       
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="attachment_id">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="attachment">
           Attachment (Upload Picture):
         </label>
         <input
           type="file"
-          id="attachment_id"
+          id="attachment"
           class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           @change="handleFileChange"
         />
@@ -72,12 +72,14 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
       formData: {
         name: '',
-        attachment_id: null,
+        attachment: null,
         home_address: '',
         mailing_address: '',
       },
@@ -85,19 +87,39 @@ export default {
     };
   },
   methods: {
-    submitForm() {
-      console.log('Form submitted with data:', this.formData);
+    async submitForm() {
+      try {
+        const formData = new FormData();
+        formData.append('name', this.formData.name);
+        formData.append('home_address', this.formData.home_address);
+        formData.append('mailing_address', this.formData.mailing_address);
+        formData.append('fillMailingAddress', this.fillMailingAddress);
+
+        if (this.formData.attachment) {
+          formData.append('attachment', this.formData.attachment);
+        }
+
+        const response = await axios.post('/api/add-new-person', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        // Handle the response as needed
+        console.log('API response:', response.data);
+      } catch (error) {
+        console.error('Error submitting data:', error);
+      }
     },
     handleFileChange(event) {
       const file = event.target.files[0];
-      this.formData.attachment_id = file;
+      this.formData.attachment = file;
     },
   },
   watch: {
     'formData.home_address'(newVal) {
       if (this.fillMailingAddress) {
         this.formData.mailing_address = newVal;
-        console.log(this.formData.mailing_address);
       }
     },
   },
