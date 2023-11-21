@@ -9,7 +9,7 @@ class PersonController extends Controller
 {
     public function get_person_with_info($id)
     {
-        $person = Person::with('personalInfo')->find($id);
+        $person = Person::with('emails')->with('phones')->find($id);
 
         if (!$person) {
             return response()->json(['message' => 'Person not found'], 404);
@@ -54,5 +54,13 @@ class PersonController extends Controller
             'message' => 'Person added successfully',
             'person' => $person,
         ], 201);
+    }
+
+    public function AddAdditionalInfo(Request $request)
+    {
+        $validatedData = $request->validate([
+            'email' => 'required|string',
+            'phone_number' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
     }
 }

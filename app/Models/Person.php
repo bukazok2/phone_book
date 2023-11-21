@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Email;
 
 class Person extends Model
 {
@@ -17,8 +17,13 @@ class Person extends Model
         'mailing_address',
     ];
 
-    public function personalInfo()
+    public function emails()
     {
-        return $this->hasMany(PersonalInfo::class);
+        return $this->hasMany(Email::class);
+    }
+
+    public function phones()
+    {
+        return $this->hasMany(Phone::class);
     }
 }

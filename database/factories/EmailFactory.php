@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Faker\Factory as FakerFactory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PersonalInfo>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Email>
  */
-class PersonalInfoFactory extends Factory
+class EmailFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -22,7 +22,6 @@ class PersonalInfoFactory extends Factory
         return [
             'person_id' => 1,
             'email' => $faker->unique()->safeEmail(),
-            'phone_number' => $faker->phoneNumber,
         ];
     }
 }
