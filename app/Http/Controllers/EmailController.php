@@ -42,4 +42,26 @@ class EmailController extends Controller
         ], 200);
     }
 
+    public function edit_email(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'email' => 'required|string|email|unique:emails,email,' . $id,
+        ]);
+
+        $email = Email::find($id);
+
+        if (!$email) {
+            return response()->json([
+                'message' => 'Email not found',
+            ], 404);
+        }
+
+        $email->update(['email' => $validatedData['email']]);
+
+        return response()->json([
+            'message' => 'Email updated successfully',
+            'email' => $email,
+        ], 200);
+    }
+
 }

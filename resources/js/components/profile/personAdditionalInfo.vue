@@ -9,17 +9,28 @@
       </thead>
       <tbody>
         <tr v-for="info in personInfo" :key="info.id">
-          <td class="px-6 py-4 whitespace-nowrap border-b text-center">{{ displayField(info) }}</td>
           <td class="px-6 py-4 whitespace-nowrap border-b text-center">
-              <span class="cursor-pointer" @click="editPerson(person.id)">
-              <font-awesome-icon icon="edit" />
-          </span>
-          <span class="cursor-pointer ml-2" @click="deleteField(info.id)">
-              <font-awesome-icon icon="trash-can" />
-          </span>
+            <span v-if="editMode && editId === info.id">
+              <input v-model="updatedFieldVal" type="text" class="border rounded p-2">
+            </span>
+            <span v-else>
+              {{ displayField(info) }}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap border-b text-center">
+            <span v-if="editMode && editId === info.id">
+              <button @click="updateRow(info.id)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update</button>
+            </span>
+            <span v-else>
+               <span class="cursor-pointer" @click="editField(info.id)">
+                <font-awesome-icon icon="edit" />
+              </span>
+              <span class="cursor-pointer ml-2" @click="deleteField(info.id)">
+                <font-awesome-icon icon="trash-can" />
+              </span>
+            </span>
           </td>
         </tr>
-        
         <tr v-if="isAddingRow">
           <td class="px-6 py-4 whitespace-nowrap border-b text-center">
             <input v-model="newRow.fieldVal" type="text" class="border rounded p-2">
@@ -36,7 +47,6 @@
 </template>
 
 <script>
-
 import axios from 'axios';
 
 export default {
@@ -44,14 +54,14 @@ export default {
   data() {
     return {
       isAddingRow: false,
+      editMode:false,
+      editId: 0,
+      updatedFieldVal: '',
       newRow: {
         id: 0,
         fieldVal: '',
       },
     };
-  },
-  computed: {
-    
   },
   methods: {
     addNewRow() {
@@ -60,7 +70,7 @@ export default {
     saveNewRow() {
       const requestData = {
         person_id: this.$route.params.id,
-        [this.personInfoType === 'email' ? 'email' : 'phone_number']: this.newRow.fieldVal,
+        [this.personInfoType]: this.newRow.fieldVal,
       };
 
       axios.post(`/api/add-new-${this.personInfoType}`, requestData)
@@ -78,7 +88,9 @@ export default {
         id: 0,
         fieldVal: '',
       };
-
+      this.editId = 0;
+      this.editMode = false;
+      this.updatedFieldVal = "";
       this.$emit('dataInsertedSuccessfully');
     },
     displayField(personalInfo) {
@@ -88,14 +100,33 @@ export default {
       const deleteEndpoint = `/api/delete-${this.personInfoType}/${id}`;
 
       axios.post(deleteEndpoint, {_method: 'DELETE'})
-          .then(response => {
-              console.log(`${this.personInfoType} deleted successfully`, response.data);
-              
-              this.requestSuccess();
-          })
-          .catch(error => {
-              console.error(`Error deleting ${this.personInfoType}`, error);
-          });
+        .then(response => {
+          console.log(`${this.personInfoType} deleted successfully`, response.data);
+          this.requestSuccess();
+        })
+        .catch(error => {
+          console.error(`Error deleting ${this.personInfoType}`, error);
+        });
+    },
+    editField(id) {
+      this.editId = id;
+      this.editMode = true;
+      const index = this.personInfo.findIndex(info => info.id === id);
+      this.updatedFieldVal = this.personInfo[index][this.personInfoType];
+    },
+    updateRow(id) {
+      const requestData = {
+        [this.personInfoType]: this.updatedFieldVal,
+        person_id: this.$route.params.id,
+      };
+
+      axios.put(`/api/edit-${this.personInfoType}/${id}`, requestData)
+        .then(response => {
+          this.requestSuccess();
+        })
+        .catch(error => {
+          console.error(`Error updating ${this.personInfoType}`, error);
+        });
     },
   },
 };

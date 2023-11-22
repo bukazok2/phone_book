@@ -15,9 +15,9 @@ class PhoneController extends Controller
         ]);
 
         $phone = new Phone();
-        $result = $phone->addNewPhone($validatedData);
+        $result = $phone->firstOrCreate($validatedData);
 
-        if ($result !== false) 
+        if ($result->wasRecentlyCreated) 
         {
             return response()->json([
                 'message' => 'Phone number added successfully',
@@ -48,4 +48,28 @@ class PhoneController extends Controller
             'message' => 'Phone deleted successfully',
         ], 200);
     }
+
+    public function edit_phone(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'person_id' => 'required',
+            'phone_number' => 'required|string|min:11|max:11|unique:phones,phone_number,' . $id . ',id,person_id,' . $request->input('person_id'),
+        ]);
+
+        $phone = Phone::find($id);
+
+        if (!$phone) {
+            return response()->json([
+                'message' => 'Phone number not found',
+            ], 404);
+        }
+
+        $phone->update(['phone_number' => $validatedData['phone_number']]);
+
+        return response()->json([
+            'message' => 'Phone number updated successfully',
+            'phone' => $phone,
+        ], 200);
+    }
+
 }
