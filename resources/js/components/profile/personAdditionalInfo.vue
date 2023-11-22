@@ -79,7 +79,7 @@ export default {
           this.requestSuccess();
         })
         .catch(error => {
-          console.error(`Error adding ${this.personInfoType}`, error);
+          this.$emit('error', error.response.data.message);
         });
     },
     requestSuccess(){
@@ -105,7 +105,7 @@ export default {
           this.requestSuccess();
         })
         .catch(error => {
-          console.error(`Error deleting ${this.personInfoType}`, error);
+          this.$emit('error', error.response.data.message);
         });
     },
     editField(id) {
@@ -125,7 +125,7 @@ export default {
           this.requestSuccess();
         })
         .catch(error => {
-          console.error(`Error updating ${this.personInfoType}`, error);
+          this.$emit('error', error.response.data.message);
         });
     },
   },

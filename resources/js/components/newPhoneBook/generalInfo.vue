@@ -1,5 +1,7 @@
 <template>
+<Error v-if="error" :errorMessage="error" @close="clearError" />
   <div class="max-w-md mx-auto mt-8 p-6 bg-white rounded shadow-md">
+    
     <div v-if="attachment" class="w-12 h-12 overflow-hidden rounded-full mr-4">
         <img :src="'/storage/' + attachment" alt="Profile Picture" class="w-full h-full object-cover">
     </div>
@@ -82,10 +84,15 @@
 
 <script>
 import axios from 'axios';
+import Error from '../error.vue';
 
 export default {
+  components: {
+    Error,
+  },
   data() {
     return {
+      error : null,
       formData: {
         name: '',
         attachment: null,
@@ -97,7 +104,11 @@ export default {
     };
   },
   methods: {
+    clearError(){
+      this.error = null;
+    },
     async submitForm() {
+      let response;
       try {
         const formDataToSend = new FormData();
         formDataToSend.append('name', this.formData.name);
@@ -108,7 +119,7 @@ export default {
           formDataToSend.append('attachment', this.formData.attachment);
         }
 
-        let response = "";
+        
         if (!this.$route.params.id) {
           response = await axios.post('/api/add-new-person', formDataToSend, {
             headers: {
@@ -122,14 +133,13 @@ export default {
             },
           });
         }
+        this.error = response.message;
         this.$router.push({ name: 'profile', params: { id: response.data.person.id } });
 
       } catch (error) {
-        console.error('Error submitting data:', error);
+        this.error = error.response.data.message;
       }
     },
-
-
     handleFileChange(event) {
       const file = event.target.files[0];
       this.formData.attachment = file;

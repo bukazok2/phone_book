@@ -1,13 +1,14 @@
 <template>
   <div>
+    <Error v-if="error" :errorMessage="error" @close="clearError" />
     <div v-if="person">
          <PersonGeneralProfile :person="person" />
         <div class="flex">
             <div class="w-1/2 mr-4">
-             <PersonAdditionalInfo :person-info="person.emails" :person-info-type="'email'" :field="'Email'" @dataInsertedSuccessfully="fetchPersonData" />
+             <PersonAdditionalInfo :person-info="person.emails" :person-info-type="'email'" :field="'Email'" @dataInsertedSuccessfully="fetchPersonData" @error="handleError" />
             </div>
             <div class="w-1/2">
-            <PersonAdditionalInfo :person-info="person.phones" :person-info-type="'phone_number'" :field="'Phone number'" @dataInsertedSuccessfully="fetchPersonData"/>
+            <PersonAdditionalInfo :person-info="person.phones" :person-info-type="'phone_number'" :field="'Phone number'" @dataInsertedSuccessfully="fetchPersonData" @error="handleError"/>
             </div>
         </div>
     </div>
@@ -26,11 +27,13 @@
 import axios from 'axios';
 import PersonGeneralProfile from './personGeneralProfile.vue';
 import PersonAdditionalInfo from './personAdditionalInfo.vue';
+import Error from '../error.vue';
 
 export default {
   props: ['id'],
   data() {
     return {
+      error: null,
       person: null,
     };
   },
@@ -38,6 +41,12 @@ export default {
     this.fetchPersonData();
   },
   methods: {
+    clearError(){
+      this.error = null;
+    },
+    handleError(errorMessage) {
+      this.error = errorMessage;
+    },
     async fetchPersonData() {
       try {
         const response = await axios.get(`/api/Person/${this.id}`);
@@ -51,6 +60,7 @@ export default {
   components: {
     PersonGeneralProfile,
     PersonAdditionalInfo,
+    Error
   },
 };
 </script>
