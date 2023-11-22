@@ -2,7 +2,14 @@
   <div>
     <div v-if="person">
          <PersonGeneralProfile :person="person" />
-         <PersonAdditionalInfo :person="person" />
+        <div class="flex">
+            <div class="w-1/2 mr-4">
+             <PersonAdditionalInfo :person-info="person.emails"/>
+            </div>
+            <div class="w-1/2">
+            <PersonAdditionalInfo :person-info="person.phones"/>
+            </div>
+        </div>
     </div>
     <div v-else>
       <p>Loading...</p>
