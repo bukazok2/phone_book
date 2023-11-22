@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\PhoneController;
+use App\Http\Controllers\EmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,3 +22,4 @@ Route::get('/Persons', [PersonController::class,'get_all_person']);
 
 route::post('/add-new-person', [PersonController::class, 'add_new_person']);
 route::post('/add-new-phone', [PhoneController::class, 'add_new_phone']);
+route::post('/add-new-email', [EmailController::class, 'add_new_email']);

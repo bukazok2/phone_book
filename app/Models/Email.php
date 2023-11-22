@@ -9,4 +9,8 @@ class Email extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'email',
+        'person_id'
+    ];
 }

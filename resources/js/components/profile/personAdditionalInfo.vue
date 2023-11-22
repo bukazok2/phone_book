@@ -52,7 +52,7 @@ export default {
   },
   computed: {
     fieldLabel() {
-      return this.personInfoType === 'emails' ? 'Email' : 'Phone';
+      return this.personInfoType === 'email' ? 'Email' : 'Phone';
     },
   },
   methods: {
@@ -62,27 +62,29 @@ export default {
     saveNewRow() {
       const requestData = {
         person_id: this.$route.params.id,
-        phone_number: this.newRow.fieldVal,
+        [this.personInfoType === 'email' ? 'email' : 'phone_number']: this.newRow.fieldVal,
       };
 
-      axios.post('/api/add-new-phone', requestData)
+      axios.post(`/api/add-new-${this.personInfoType}`, requestData)
         .then(response => {
-          console.log('Phone number added successfully', response.data);
-
-          this.isAddingRow = false;
-          this.newRow = {
-            id: 0,
-            fieldVal: '',
-          };
-
-          this.$emit('dataInsertedSuccessfully');
+          console.log(`${this.personInfoType} added successfully`, response.data);
+          this.postSuccess();
         })
         .catch(error => {
-          console.error('Error adding phone number', error);
-      });
+          console.error(`Error adding ${this.personInfoType}`, error);
+        });
+    },
+    postSuccess(){
+      this.isAddingRow = false;
+      this.newRow = {
+        id: 0,
+        fieldVal: '',
+      };
+
+      this.$emit('dataInsertedSuccessfully');
     },
     displayField(personalInfo) {
-      return this.personInfoType === 'emails' ? personalInfo.email : personalInfo.phone_number;
+      return this.personInfoType === 'email' ? personalInfo.email : personalInfo.phone_number;
     },
   },
 };
