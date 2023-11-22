@@ -24,6 +24,7 @@ route::post('/add-new-person', [PersonController::class, 'add_new_person']);
 route::post('/add-new-phone_number', [PhoneController::class, 'add_new_phone']);
 route::post('/add-new-email', [EmailController::class, 'add_new_email']);
 
+route::post('/edit-person/{id}', [PersonController::class, 'edit_person']);
 Route::put('/edit-phone_number/{id}', [PhoneController::class, 'edit_phone']);
 Route::put('/edit-email/{id}', [EmailController::class, 'edit_email']);
 

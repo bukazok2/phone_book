@@ -72,4 +72,46 @@ class PersonController extends Controller
             'person' => $person,
         ], 201);
     }
+
+    public function edit_person(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'attachment' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'home_address' => 'nullable|string',
+            'mailing_address' => 'nullable|string',
+        ]);
+
+        $person = Person::find($id);
+
+        if (!$person) {
+            return response()->json([
+                'message' => 'Person not found',
+            ], 404);
+        }
+
+        $person->name = $validatedData['name'];
+
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $attachmentIdPath = $file->store('attachments', 'public');
+            $person->attachment = $attachmentIdPath;
+        }
+
+        $person->home_address = $validatedData['home_address'];
+
+        if ($request->has('fillMailingAddress') && $validatedData['home_address']) {
+            $person->mailing_address = $validatedData['home_address'];
+        } else {
+            $person->mailing_address = $validatedData['mailing_address'];
+        }
+
+        $person->save();
+
+        return response()->json([
+            'message' => 'Person updated successfully',
+            'person' => $person,
+        ], 200);
+    }
+
 }

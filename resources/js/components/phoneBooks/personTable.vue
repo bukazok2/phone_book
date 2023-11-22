@@ -60,6 +60,9 @@ export default {
 
         this.$emit('postSentSuccessfully');
     },
+    editPerson(id) {
+       this.$router.push({ name: 'new', params: { id: id } });
+    }
   }
 };
 </script>

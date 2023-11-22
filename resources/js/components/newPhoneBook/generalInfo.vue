@@ -1,5 +1,8 @@
 <template>
   <div class="max-w-md mx-auto mt-8 p-6 bg-white rounded shadow-md">
+    <div v-if="attachment" class="w-12 h-12 overflow-hidden rounded-full mr-4">
+        <img :src="'/storage/' + attachment" alt="Profile Picture" class="w-full h-full object-cover">
+    </div>
     <form @submit.prevent="submitForm">
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
@@ -89,33 +92,44 @@ export default {
         home_address: '',
         mailing_address: '',
       },
+      attachment: '',
       fillMailingAddress: false,
     };
   },
   methods: {
     async submitForm() {
       try {
-        const formData = new FormData();
-        formData.append('name', this.formData.name);
-        formData.append('home_address', this.formData.home_address);
-        formData.append('mailing_address', this.formData.mailing_address);
-        formData.append('fillMailingAddress', this.fillMailingAddress);
+        const formDataToSend = new FormData();
+        formDataToSend.append('name', this.formData.name);
+        formDataToSend.append('home_address', this.formData.home_address);
+        formDataToSend.append('mailing_address', this.formData.mailing_address);
 
         if (this.formData.attachment) {
-          formData.append('attachment', this.formData.attachment);
+          formDataToSend.append('attachment', this.formData.attachment);
         }
 
-        const response = await axios.post('/api/add-new-person', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        let response = "";
+        if (!this.$route.params.id) {
+          response = await axios.post('/api/add-new-person', formDataToSend, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+        } else {
+          response = await axios.post(`/api/edit-person/${this.$route.params.id}`, formDataToSend, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+        }
         this.$router.push({ name: 'profile', params: { id: response.data.person.id } });
 
       } catch (error) {
         console.error('Error submitting data:', error);
       }
     },
+
+
     handleFileChange(event) {
       const file = event.target.files[0];
       this.formData.attachment = file;
@@ -128,5 +142,20 @@ export default {
       }
     },
   },
+  async created() {
+    if (this.$route.params.id) {
+      try {
+        const response = await axios.get(`/api/Person/${this.$route.params.id}`);
+        console.log(response);
+        this.formData.name = response.data.person.name;
+        this.formData.home_address = response.data.person.home_address;
+        this.formData.mailing_address = response.data.person.mailing_address;
+        this.attachment = response.data.person.attachment;
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+  }
+
 };
 </script>
