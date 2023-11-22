@@ -20,8 +20,8 @@
           <span class="cursor-pointer" @click="editPerson(person.id)">
               <font-awesome-icon icon="edit" />
           </span>
-          <span class="cursor-pointer ml-2">
-              <font-awesome-icon icon="trash-can" />
+          <span class="cursor-pointer ml-2" @click="deletePerson(person.id)">
+              <font-awesome-icon icon="trash-can"/>
           </span>
           <span class="cursor-pointer ml-2">
             <router-link :to="`/profile/${person.id}`">
@@ -45,5 +45,21 @@ export default {
       default: () => [],
     },
   },
+  methods: {
+    deletePerson(id) {
+      const deleteEndpoint = `/api/delete-person/${id}`;
+
+      axios.post(deleteEndpoint, {_method: 'DELETE'})
+        .then(response => {
+          console.log(`${this.personInfoType} deleted successfully`, response.data);
+          this.requestSuccess();
+        })
+        .catch(error => {
+          console.error(`Error deleting ${this.personInfoType}`, error);
+        });
+
+        this.$emit('postSentSuccessfully');
+    },
+  }
 };
 </script>

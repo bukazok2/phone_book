@@ -29,4 +29,5 @@ Route::put('/edit-email/{id}', [EmailController::class, 'edit_email']);
 
 route::delete('/delete-phone_number/{id}', [PhoneController::class, 'delete_phone']);
 route::delete('/delete-email/{id}', [EmailController::class, 'delete_email']);
+route::delete('/delete-person/{id}', [PersonController::class, 'delete_person']);
 

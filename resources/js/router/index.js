@@ -15,6 +15,12 @@ const routes = [
         component: newPhoneBook
     },
     {
+        path: '/new/:id',
+        name: 'new',
+        component: newPhoneBook,
+        props: true
+    },
+    {
         path: '/profile/:id',
         name: 'profile',
         component: profile,

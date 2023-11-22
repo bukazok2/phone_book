@@ -1,7 +1,7 @@
 <template>
   <div>
     <Actions />
-    <PersonTable :persons="persons" />
+    <PersonTable :persons="persons" @postSentSuccessfully="fetchData" />
   </div>
 </template>
 

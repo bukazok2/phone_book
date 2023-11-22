@@ -7,6 +7,23 @@ use App\Models\Person;
 
 class PersonController extends Controller
 {
+    public function delete_person($id)
+    {
+        $person = Person::find($id);
+
+        if (!$person) {
+            return response()->json([
+                'message' => 'Phone number not found',
+            ], 404);
+        }
+
+        $person->delete();
+
+        return response()->json([
+            'message' => 'Phone deleted successfully',
+        ], 200);
+    }
+
     public function get_person_with_info($id)
     {
         $person = Person::with('emails')->with('phones')->find($id);
@@ -54,13 +71,5 @@ class PersonController extends Controller
             'message' => 'Person added successfully',
             'person' => $person,
         ], 201);
-    }
-
-    public function AddAdditionalInfo(Request $request)
-    {
-        $validatedData = $request->validate([
-            'email' => 'required|string',
-            'phone_number' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
     }
 }
