@@ -36,8 +36,11 @@
 </template>
 
 <script>
+
+import axios from 'axios';
+
 export default {
-  props: ['personInfo'],
+  props: ['personInfo', 'personInfoType'],
   data() {
     return {
       isAddingRow: false,
@@ -48,12 +51,8 @@ export default {
     };
   },
   computed: {
-    
     fieldLabel() {
       return this.personInfoType === 'emails' ? 'Email' : 'Phone';
-    },
-    personInfoType() {
-      return Array.isArray(this.personInfo) && this.personInfo.length > 0 ? this.personInfo[0].email ? 'emails' : 'phones' : null;
     },
   },
   methods: {
@@ -61,11 +60,26 @@ export default {
       this.isAddingRow = true;
     },
     saveNewRow() {
-      this.isAddingRow = false;
-      this.newRow = {
-        id: 0,
-        fieldVal: '',
+      const requestData = {
+        person_id: this.$route.params.id,
+        phone_number: this.newRow.fieldVal,
       };
+
+      axios.post('/api/add-new-phone', requestData)
+        .then(response => {
+          console.log('Phone number added successfully', response.data);
+
+          this.isAddingRow = false;
+          this.newRow = {
+            id: 0,
+            fieldVal: '',
+          };
+
+          this.$emit('dataInsertedSuccessfully');
+        })
+        .catch(error => {
+          console.error('Error adding phone number', error);
+      });
     },
     displayField(personalInfo) {
       return this.personInfoType === 'emails' ? personalInfo.email : personalInfo.phone_number;
