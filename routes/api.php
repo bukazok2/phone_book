@@ -21,5 +21,9 @@ Route::get('/Person/{id}', [PersonController::class, 'get_person_with_info']);
 Route::get('/Persons', [PersonController::class,'get_all_person']);
 
 route::post('/add-new-person', [PersonController::class, 'add_new_person']);
-route::post('/add-new-phone', [PhoneController::class, 'add_new_phone']);
+route::post('/add-new-phone_number', [PhoneController::class, 'add_new_phone']);
 route::post('/add-new-email', [EmailController::class, 'add_new_email']);
+
+route::delete('/delete-phone_number/{id}', [PhoneController::class, 'delete_phone']);
+route::delete('/delete-email/{id}', [EmailController::class, 'delete_email']);
+

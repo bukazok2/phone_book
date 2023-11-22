@@ -3,7 +3,7 @@
     <table class="min-w-full bg-white border border-gray-300">
       <thead>
         <tr>
-          <th class="px-6 py-3 bg-gray-100 border-b text-center">{{ fieldLabel }}</th>
+          <th class="px-6 py-3 bg-gray-100 border-b text-center">{{ field }}</th>
           <th class="px-6 py-3 bg-gray-100 border-b text-center">Actions</th>
         </tr>
       </thead>
@@ -11,10 +11,10 @@
         <tr v-for="info in personInfo" :key="info.id">
           <td class="px-6 py-4 whitespace-nowrap border-b text-center">{{ displayField(info) }}</td>
           <td class="px-6 py-4 whitespace-nowrap border-b text-center">
-             <span class="cursor-pointer" @click="editPerson(person.id)">
+              <span class="cursor-pointer" @click="editPerson(person.id)">
               <font-awesome-icon icon="edit" />
           </span>
-          <span class="cursor-pointer ml-2">
+          <span class="cursor-pointer ml-2" @click="deleteField(info.id)">
               <font-awesome-icon icon="trash-can" />
           </span>
           </td>
@@ -40,7 +40,7 @@
 import axios from 'axios';
 
 export default {
-  props: ['personInfo', 'personInfoType'],
+  props: ['personInfo', 'personInfoType', 'field'],
   data() {
     return {
       isAddingRow: false,
@@ -51,9 +51,7 @@ export default {
     };
   },
   computed: {
-    fieldLabel() {
-      return this.personInfoType === 'email' ? 'Email' : 'Phone';
-    },
+    
   },
   methods: {
     addNewRow() {
@@ -68,13 +66,13 @@ export default {
       axios.post(`/api/add-new-${this.personInfoType}`, requestData)
         .then(response => {
           console.log(`${this.personInfoType} added successfully`, response.data);
-          this.postSuccess();
+          this.requestSuccess();
         })
         .catch(error => {
           console.error(`Error adding ${this.personInfoType}`, error);
         });
     },
-    postSuccess(){
+    requestSuccess(){
       this.isAddingRow = false;
       this.newRow = {
         id: 0,
@@ -84,7 +82,20 @@ export default {
       this.$emit('dataInsertedSuccessfully');
     },
     displayField(personalInfo) {
-      return this.personInfoType === 'email' ? personalInfo.email : personalInfo.phone_number;
+       return personalInfo[this.personInfoType];
+    },
+    deleteField(id) {
+      const deleteEndpoint = `/api/delete-${this.personInfoType}/${id}`;
+
+      axios.post(deleteEndpoint, {_method: 'DELETE'})
+          .then(response => {
+              console.log(`${this.personInfoType} deleted successfully`, response.data);
+              
+              this.requestSuccess();
+          })
+          .catch(error => {
+              console.error(`Error deleting ${this.personInfoType}`, error);
+          });
     },
   },
 };

@@ -31,4 +31,21 @@ class PhoneController extends Controller
             ], 422);
         }
     }
+
+    public function delete_phone(Request $request, $id)
+    {
+        $phone = Phone::find($id);
+
+        if (!$phone) {
+            return response()->json([
+                'message' => 'Phone number not found',
+            ], 404);
+        }
+
+        $phone->delete();
+
+        return response()->json([
+            'message' => 'Phone deleted successfully',
+        ], 200);
+    }
 }

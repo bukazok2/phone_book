@@ -4,10 +4,10 @@
          <PersonGeneralProfile :person="person" />
         <div class="flex">
             <div class="w-1/2 mr-4">
-             <PersonAdditionalInfo :person-info="person.emails" :person-info-type="'email'" @dataInsertedSuccessfully="fetchPersonData" />
+             <PersonAdditionalInfo :person-info="person.emails" :person-info-type="'email'" :field="'Email'" @dataInsertedSuccessfully="fetchPersonData" />
             </div>
             <div class="w-1/2">
-            <PersonAdditionalInfo :person-info="person.phones" :person-info-type="'phone'" @dataInsertedSuccessfully="fetchPersonData"/>
+            <PersonAdditionalInfo :person-info="person.phones" :person-info-type="'phone_number'" :field="'Phone number'" @dataInsertedSuccessfully="fetchPersonData"/>
             </div>
         </div>
     </div>

@@ -25,4 +25,21 @@ class EmailController extends Controller
         ], 201);
     }
 
+    public function delete_email(Request $request, $id)
+    {
+        $email = Email::find($id);
+
+        if (!$email) {
+            return response()->json([
+                'message' => 'Email not found',
+            ], 404);
+        }
+
+        $email->delete();
+
+        return response()->json([
+            'message' => 'Email deleted successfully',
+        ], 200);
+    }
+
 }
